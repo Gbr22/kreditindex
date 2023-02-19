@@ -23,8 +23,9 @@ import { completedCreditCount, correctedCreditIndex, creditIndex, totalCreditCou
 
 <style lang="scss">
 .stats {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
 
     & > div {
         flex: 1;
@@ -45,6 +46,12 @@ import { completedCreditCount, correctedCreditIndex, creditIndex, totalCreditCou
         span {
             font-size: 17px;
         }
+    }
+}
+
+@media screen and (max-width: 550px){
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 </style>

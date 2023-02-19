@@ -1,7 +1,7 @@
 <script lang="ts">
 import FilePicker from "../components/FilePicker.svelte";
 import Results from "../components/Results.svelte";
-	import Subjects from "../components/Subjects.svelte";
+import Subjects from "../components/Subjects.svelte";
 import { globalStore } from "../store";
 </script>
 
@@ -43,12 +43,13 @@ import { globalStore } from "../store";
     gap: 20px;
 
     h1, h2 {
-        font-size: 28px;
+        font-size: min(calc(6vw), 28px);
     }
 
     header {
         display: flex;
         flex-direction: row;
+        gap: 20px;
 
         h1 {
             flex: 1;
@@ -70,6 +71,13 @@ import { globalStore } from "../store";
         h2 {
             margin-bottom: calc(var(--section-padding) / 2);
         }
+    }
+}
+
+@media screen and (max-width: 750px){
+    .page {
+        --section-padding: 20px;
+        padding: 20px;
     }
 }
 </style>

@@ -9,7 +9,7 @@ import PlusIcon from '../icons/PlusIcon.svelte';
     <h4 class="subject-name-header">Tantárgy neve</h4>
     <h4>Kredit érték</h4>
     <h4>Eredmény</h4>
-    <h4>Kezelés</h4>
+    <h4><span class="action-header">Kezelés</span></h4>
     {#each $globalStore.subjects as subject}
         <input class="subject-name" type="text" value={subject.name} placeholder="Tantárgy neve">
         <NumberInput number={subject.weight} />
@@ -49,24 +49,29 @@ import PlusIcon from '../icons/PlusIcon.svelte';
         display: flex;
         justify-content: center;
         align-items: center;
+        text-align: center;
     }
 
     .subject-name {
         @include row-input-common;
         width: unset;
-        padding: 0 16px;
+        padding: 0 14px;
         border: none;
         background-color: #f1f5f9;
         font-size: 14px;
         outline: none;
         box-sizing: border-box;
+        text-align: left;
+        min-width: 50px;
 
         &::placeholder {
             color: #4b5563;
         }
 
+        border: 2px solid transparent;
+
         &:focus {
-            outline: 2px solid black;
+            border-color: black;
         }
     }
 
@@ -91,6 +96,17 @@ import PlusIcon from '../icons/PlusIcon.svelte';
                 }
             }
         }
+    }
+}
+@media screen and (max-width: 550px){
+    .subjects {
+        h4 {
+            width: min-content;
+            justify-self: center;
+        }
+    }
+    .action-header {
+        display: none;
     }
 }
 </style>
