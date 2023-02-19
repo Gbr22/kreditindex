@@ -1,48 +1,75 @@
 <script lang="ts">
 import FilePicker from "../components/FilePicker.svelte";
-import { completedCreditCount, weightedAverage, totalCreditCount, creditIndex, correctedCreditIndex } from "../stats";
+import Results from "../components/Results.svelte";
+	import Subjects from "../components/Subjects.svelte";
 import { globalStore } from "../store";
 </script>
 
-<h1>Kreditindex és átlag kalkulátor</h1>
-<FilePicker />
-<p>{$globalStore.file?.name}</p>
+<div class="page">
+    <header>
+        <h1>Kreditindex és átlag kalkulátor</h1>
+        <div class="picker"><FilePicker /></div>
+    </header>
+    <section>
+        <h2>Tárgyak</h2>
+        <Subjects />
+    </section>
+    
+    <section>
+        <h2>Statisztika</h2>
+        <Results />
+    </section>
+</div>
 
-<section>
-    <h2>Tárgyak</h2>
-    <table>
-        <tr>
-            <td>Tantárgy neve</td>
-            <td>Kredit érték</td>
-            <td>Eredmény</td>
-            <td>Hozzáadás</td>
-        </tr>
-        {#each $globalStore.subjects as subject}
-            <tr>
-                <td><input type="text" value={subject.name}></td>
-                <td>{subject.weight}</td>
-                <td>{subject.grade}</td>
-            </tr>
-        {/each}
-    </table>
-</section>
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
-<section>
-    <h2>Statisztika</h2>
-    <div>
-        <div>Kreditek száma</div>
-        <div>{$completedCreditCount}/{$totalCreditCount}</div>
-    </div>
-    <div>
-        <div>Kreditindex</div>
-        <div>{$creditIndex}</div>
-    </div>
-    <div>
-        <div>Korrigált kreditindex</div>
-        <div>{$correctedCreditIndex}</div>
-    </div>
-    <div>
-        <div>Súlyozott átlag</div>
-        <div>{$weightedAverage}</div>
-    </div>
-</section>
+:global(body) {
+    font-family: Rubik;
+    background-color: #f1f5f9;
+}
+:global(*) {
+    font-family: inherit;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.page {
+    --section-padding: 20px;
+    padding: 10vh 15vw;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h1, h2 {
+        font-size: 28px;
+    }
+
+    header {
+        display: flex;
+        flex-direction: row;
+
+        h1 {
+            flex: 1;
+        }
+
+        .picker {
+            display: grid;
+            place-content: center;
+        }
+    }
+    header, section {
+        border-radius: calc(var(--section-padding) / 2);
+        padding: var(--section-padding);
+        background-color: #fff;
+        box-shadow: 0 8px 12px rgba($color: #000000, $alpha: 0.08);
+    }
+
+    section {
+        h2 {
+            margin-bottom: calc(var(--section-padding) / 2);
+        }
+    }
+}
+</style>

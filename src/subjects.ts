@@ -3,7 +3,7 @@ import type { Row } from "read-excel-file";
 export interface Subject {
     name: string
     weight: number
-    grade?: number
+    grade: number
 }
 
 const gradeMap: {[key: string]: number} = {
@@ -27,7 +27,7 @@ export function getSubjects(rows: Row[]){
         let weight = Number(row[2]);
         let gradeText = String(row[7]);
         let gradeMatches = [...gradeText.matchAll(gradeRegex)];
-        let grade: number | undefined;
+        let grade: number = 1;
         let last = gradeMatches[gradeMatches.length-1];
         if (last){
             let lastText = last[0];
