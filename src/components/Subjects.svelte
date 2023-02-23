@@ -1,8 +1,34 @@
 <script lang="ts">
-import { globalStore } from "../store";
 import NumberInput from "./NumberInput.svelte";
 import XIcon from '../icons/XIcon.svelte';
 import PlusIcon from '../icons/PlusIcon.svelte';
+import { writable } from "svelte/store";
+import type { Subject } from "../subjects";
+import { subjects } from "../state";
+
+let subjectName = "";
+let subjectWeight = writable(3);
+let subjectGrade = writable(3);
+
+function addSubject(){
+    let subject: Subject = {
+        name: subjectName,
+        weight: $subjectWeight,
+        grade: $subjectGrade
+    }
+    subjects.update(subjects=>{
+        return [...subjects, subject];
+    })
+    subjectName = "";
+}
+
+function removeSubject(subject: Subject){
+    subjects.update((subjects)=>{
+        let newArray = [...subjects];
+        newArray.splice(newArray.indexOf(subject),1);
+        return newArray;
+    })
+}
 </script>
 
 <div class="subjects">
@@ -10,21 +36,21 @@ import PlusIcon from '../icons/PlusIcon.svelte';
     <h4>Kredit érték</h4>
     <h4>Eredmény</h4>
     <h4><span class="action-header">Kezelés</span></h4>
-    {#each $globalStore.subjects as subject}
-        <input class="subject-name" type="text" value={subject.name} placeholder="Tantárgy neve">
-        <NumberInput number={subject.weight} />
-        <NumberInput number={subject.grade} />
+    {#each $subjects as subject}
+        <input class="subject-name" type="text" bind:value={subject.name} placeholder="Tantárgy neve">
+        <NumberInput bind:value={subject.weight} min={1} max={30} />
+        <NumberInput bind:value={subject.grade} min={1} max={5} />
         <span class="action">
-            <button class="remove">
+            <button class="remove" on:click={()=>{removeSubject(subject)}}>
                 <XIcon />
             </button>
         </span>
     {/each}
-    <input class="subject-name" type="text" value={""} placeholder="Tantárgy neve">
-    <NumberInput number={5} />
-    <NumberInput number={5} />
+    <input class="subject-name" type="text" bind:value={subjectName} placeholder="Tantárgy neve">
+    <NumberInput value={$subjectWeight} min={1} max={30} />
+    <NumberInput value={$subjectGrade} min={1} max={5} />
     <span class="action">
-        <button class="add">
+        <button class="add" on:click={addSubject}>
             <PlusIcon />
         </button>
     </span>

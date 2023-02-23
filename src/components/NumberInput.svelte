@@ -1,12 +1,31 @@
 <script lang="ts">
-export let number: number;
+export let value: number;
+export let min: number;
+export let max: number;
+
+function keepRange(n: number){
+    if (n < min){
+        return min;
+    }
+    if (n > max){
+        return max;
+    }
+    return n;
+}
+
+function plus(){
+    value = keepRange(value+1);
+}
+function minus(){
+    value = keepRange(value-1);
+}
 </script>
 
 <span class="input">
     <span class="buttons">
-        <button class="minus">-</button>
-        <span class="number">{number}</span>
-        <button class="plus">+</button>
+        <button class="minus" on:click={minus}>-</button>
+        <span class="number">{value}</span>
+        <button class="plus" on:click={plus}>+</button>
     </span>
 </span>
 

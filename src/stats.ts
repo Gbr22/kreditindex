@@ -1,5 +1,5 @@
 import { derived } from "svelte/store";
-import { globalStore } from "./store";
+import { subjects } from "./state";
 import type { Subject } from "./subjects";
 
 function sum(numbers: number[]){
@@ -41,22 +41,22 @@ function formatNumber(n: number){
     return n.toFixed(2);
 }
 
-export const totalCreditCount = derived(globalStore, ($globalStore)=>{
-    return getTotalCreditCount($globalStore.subjects);
+export const totalCreditCount = derived(subjects, ($subjects)=>{
+    return getTotalCreditCount($subjects);
 })
 
-export const completedCreditCount = derived(globalStore, ($globalStore)=>{
-    return getCompletedCreditCount($globalStore.subjects);
+export const completedCreditCount = derived(subjects, ($subjects)=>{
+    return getCompletedCreditCount($subjects);
 })
 
-export const weightedAverage = derived(globalStore, ($globalStore)=>{
-    return formatNumber(getWeightedAverage($globalStore.subjects));
+export const weightedAverage = derived(subjects, ($subjects)=>{
+    return formatNumber(getWeightedAverage($subjects));
 })
 
-export const creditIndex = derived(globalStore, ($globalStore)=>{
-    return formatNumber(getCreditIndex($globalStore.subjects));
+export const creditIndex = derived(subjects, ($subjects)=>{
+    return formatNumber(getCreditIndex($subjects));
 })
 
-export const correctedCreditIndex = derived(globalStore, ($globalStore)=>{
-    return formatNumber(getCorrectedCreditIndex($globalStore.subjects));
+export const correctedCreditIndex = derived(subjects, ($subjects)=>{
+    return formatNumber(getCorrectedCreditIndex($subjects));
 })

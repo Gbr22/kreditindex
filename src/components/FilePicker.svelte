@@ -1,6 +1,6 @@
 <script lang="ts">
 import BriefcaseIcon from "../icons/BriefcaseIcon.svelte";
-import { globalStore } from "../store";
+import { currentFile } from "../state";
 
 function pickFile(){
     let input = document.createElement("input");
@@ -9,7 +9,7 @@ function pickFile(){
     input.onchange = ()=>{
         let file = input?.files?.[0];
         if (file){
-            $globalStore.file = file;
+            currentFile.set(file);
         }
     }
 

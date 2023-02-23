@@ -2,7 +2,6 @@
 import FilePicker from "../components/FilePicker.svelte";
 import Results from "../components/Results.svelte";
 import Subjects from "../components/Subjects.svelte";
-import { globalStore } from "../store";
 </script>
 
 <div class="page">
