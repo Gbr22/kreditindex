@@ -46,29 +46,28 @@ function minus(){
     
     .buttons {
         position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
 
-        .number, button {
+        .number {
             @include row-input-common;
+        }
+        .number, button {
             display: grid;
             justify-content: center;
             align-items: center;
-            background-color: #f1f5f9;
+            background-color: #e4e4e7;
             border: none;
             font-size: 16px;
         }
         button {
-            background-color: transparent;
-            position: absolute;
-            top: 0;
+            --size: 28px;
+            width: var(--size);
+            height: var(--size);
             margin: 0 8px;
-            display: none;
-
-            &.plus {
-                left: 100%;
-            }
-            &.minus {
-                right: 100%;
-            }
+            border-radius: 50%;
 
             &:hover {
                 border: 2px solid black;

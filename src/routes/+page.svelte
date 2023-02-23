@@ -9,7 +9,7 @@ import Subjects from "../components/Subjects.svelte";
         <h1>Kreditindex és átlag kalkulátor</h1>
         <div class="picker"><FilePicker /></div>
     </header>
-    <section>
+    <section class="subjects">
         <h2>Tárgyak</h2>
         <Subjects />
     </section>
@@ -73,10 +73,27 @@ import Subjects from "../components/Subjects.svelte";
     }
 }
 
-@media screen and (max-width: 750px){
+@media screen and (max-width: 850px){
     .page {
         --section-padding: 20px;
         padding: 20px;
+    }
+}
+
+@media screen and (max-width: 650px){
+    .page {
+        section {
+            h2 {
+                text-align: center;
+            }
+        }
+        .subjects {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            h2 {
+                display: none;
+            }
+        }
     }
 }
 </style>

@@ -30,6 +30,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"read-excel-file": "^5.6.1"
+		"read-excel-file": "^5.6.1",
+		"svelte-media-queries": "^1.5.4"
 	}
 }

@@ -1,5 +1,5 @@
 @mixin row-input-common {
-    --size: min(35px,calc(4vw + 10px));
+    --size: 35px;
     height: var(--size);
     border-radius: 8px;
     width: var(--size);
