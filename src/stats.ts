@@ -36,9 +36,9 @@ function getCorrectedCreditIndex(subjects: Subject[]){
 
 function formatNumber(n: number){
     if (isNaN(n)){
-        return "0.00";
+        return "0.0000";
     }
-    return n.toFixed(2);
+    return n.toFixed(4);
 }
 
 export const totalCreditCount = derived(subjects, ($subjects)=>{

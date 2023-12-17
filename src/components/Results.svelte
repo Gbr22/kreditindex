@@ -35,7 +35,7 @@ import { completedCreditCount, correctedCreditIndex, creditIndex, totalCreditCou
         gap: 5px;
 
         h3 {
-            font-weight: 500;
+            font-weight: 600;
             flex: 1;
             display: flex;
             flex-direction: row;
@@ -45,6 +45,7 @@ import { completedCreditCount, correctedCreditIndex, creditIndex, totalCreditCou
         }
         span {
             font-size: 17px;
+            font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; 
         }
     }
 }

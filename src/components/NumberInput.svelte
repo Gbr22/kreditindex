@@ -37,6 +37,7 @@ function minus(){
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; 
 
     &:hover {
         .buttons button {

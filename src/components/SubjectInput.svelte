@@ -149,7 +149,7 @@ function removeSubject(subject: Subject){
     h4 {
         text-align: center;
         font-size: 17px;
-        font-weight: 500;
+        font-weight: 600;
     }
 
     .top {

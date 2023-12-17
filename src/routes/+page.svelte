@@ -21,11 +21,12 @@ import Subjects from "../components/Subjects.svelte";
 </div>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,700;1,400&display=swap');
-
 :global(body) {
-    font-family: Rubik;
+    font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif; 
     background-color: #f1f5f9;
+}
+:global(h1, h2, h3, h4, h5, h6){
+    font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
 }
 :global(*) {
     font-family: inherit;
