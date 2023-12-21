@@ -1,13 +1,14 @@
 <script lang="ts">
 import type { Subject } from "../subjects";
-import { subjects } from "../state";
+import { currentSemester, subjects, allSemestersSymbol, currentSemesterId } from "../state";
 import MediaQuery from 'svelte-media-queries';
 import SubjectInput from "./SubjectInput.svelte";
 
 let subjectToAdd: Subject = {
     name: "",
     weight: 3,
-    grade: 3
+    grade: 3,
+    id: ""
 }
 
 </script>
@@ -15,11 +16,13 @@ let subjectToAdd: Subject = {
 <MediaQuery query="(max-width: 650px)" let:matches={isScreenSmall}>
     {#if isScreenSmall}
         <div class="subjects small-screen">
-            {#each $subjects as subject}
-                <SubjectInput bind:value={subject} action="remove" />
+            {#each $subjects as subject (subject.id)}
+                <SubjectInput value={subject} type="remove" />
                 <div class="divider"></div>
             {/each}
-            <SubjectInput bind:value={subjectToAdd} action="add" />
+            {#if $currentSemesterId != allSemestersSymbol}
+                <SubjectInput value={subjectToAdd} type="add" />
+            {/if}
         </div>
     {:else}
         <div class="subjects">
@@ -27,10 +30,12 @@ let subjectToAdd: Subject = {
             <h4>Kredit érték</h4>
             <h4>Eredmény</h4>
             <h4><span class="action-header">Kezelés</span></h4>
-            {#each $subjects as subject}
-                <SubjectInput bind:value={subject} action="remove" />
+            {#each $subjects as subject (subject.id)}
+                <SubjectInput value={subject} type="remove" />
             {/each}
-            <SubjectInput bind:value={subjectToAdd} action="add" />
+            {#if $currentSemesterId != allSemestersSymbol}
+                <SubjectInput value={subjectToAdd} type="add" />
+            {/if}
         </div>
     {/if}
 </MediaQuery>

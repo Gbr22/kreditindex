@@ -1,6 +1,7 @@
 <script lang="ts">
 import FilePicker from "../components/FilePicker.svelte";
 import Results from "../components/Results.svelte";
+import Semesters from "../components/Semesters.svelte";
 import Subjects from "../components/Subjects.svelte";
 </script>
 
@@ -9,6 +10,9 @@ import Subjects from "../components/Subjects.svelte";
         <h1>Kreditindex és átlag kalkulátor</h1>
         <div class="picker"><FilePicker /></div>
     </header>
+    <section class="semesters">
+        <Semesters />
+    </section>
     <section class="subjects">
         <h2>Tárgyak</h2>
         <Subjects />

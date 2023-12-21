@@ -1,39 +1,45 @@
 <script lang="ts">
+	import { writable } from "svelte/store";
 import PlusIcon from "../icons/PlusIcon.svelte";
 import XIcon from "../icons/XIcon.svelte";
-import { subjects } from "../state";
+import { addSubject, currentSemesterId, removeSubject, updateSubject } from "../state";
 import type { Subject } from "../subjects";
 import NumberInput from "./NumberInput.svelte";
 import MediaQuery from 'svelte-media-queries';
 
 export let value: Subject;
-export let action: "add" | "remove";
+export let type: "add" | "remove";
 
-let [Icon,executeAction] = (()=>{
-    if (action == "add"){
-        return [PlusIcon,addSubject];
-    } else if (action == "remove"){
-        return [XIcon,removeSubject];
+const subject = writable({...value});
+
+const Icon = (()=>{
+    if (type == "add"){
+        return PlusIcon;
+    } else if (type == "remove"){
+        return XIcon;
     } else {
         throw new Error("Unreachable");
     }
 })()
 
-
-function addSubject(subject: Subject){
-    subjects.update(subjects=>{
-        return [...subjects, {...subject}];
-    })
-    subject.name = "";
+function onClick(){
+    if (type == "add"){
+        const copy = {...$subject, id: crypto.randomUUID()};
+        addSubject(copy,$currentSemesterId);
+        subject.update(s=>{
+            return {...s, name: ""}
+        })
+    }
+    else if (type == "remove"){
+        removeSubject(value.id);
+    }
 }
 
-function removeSubject(subject: Subject){
-    subjects.update((subjects)=>{
-        let newArray = [...subjects];
-        newArray.splice(newArray.indexOf(subject),1);
-        return newArray;
-    })
-}
+subject.subscribe(newSubject=>{
+    if (type == "remove"){
+        updateSubject(newSubject);
+    }
+})
 
 </script>
 
@@ -42,9 +48,9 @@ function removeSubject(subject: Subject){
         <div class="subject small-screen">
             <h4>Tantárgy</h4>
             <div class="top">
-                <input class="subject-name" type="text" bind:value={value.name} placeholder="Tantárgy neve">
+                <input class="subject-name" type="text" bind:value={$subject.name} placeholder="Tantárgy neve">
                 <span class="action">
-                    <button class={action} on:click={()=>{executeAction(value)}}>
+                    <button class={type} on:click={onClick}>
                         <Icon />
                     </button>
                 </span>
@@ -52,20 +58,20 @@ function removeSubject(subject: Subject){
             <div class="bottom">
                 <span class="weight">
                     <h4>Kredit</h4>
-                    <NumberInput bind:value={value.weight} min={1} max={30} />
+                    <NumberInput bind:value={$subject.weight} min={1} max={30} />
                 </span>
                 <span class="grade">
                     <h4>Jegy</h4>
-                    <NumberInput bind:value={value.grade} min={1} max={5} />
+                    <NumberInput bind:value={$subject.grade} min={1} max={5} />
                 </span>
             </div>
         </div>
     {:else}
-        <input class="subject-name" type="text" bind:value={value.name} placeholder="Tantárgy neve">
-        <span class="weight"><NumberInput bind:value={value.weight} min={1} max={30} /></span>
-        <span class="grade"><NumberInput bind:value={value.grade} min={1} max={5} /></span>
+        <input class="subject-name" type="text" bind:value={$subject.name} placeholder="Tantárgy neve">
+        <span class="weight"><NumberInput bind:value={$subject.weight} min={1} max={30} /></span>
+        <span class="grade"><NumberInput bind:value={$subject.grade} min={1} max={5} /></span>
         <span class="action">
-            <button class={action} on:click={()=>{executeAction(value)}}>
+            <button class={type} on:click={onClick}>
                 <Icon />
             </button>
         </span>
