@@ -11,16 +11,15 @@ import Results from '@/components/Results.vue';
 			<h1>Kreditindex és átlag kalkulátor</h1>
 			<div class="picker"><FilePicker /></div>
 		</header>
+        <section>
+			<Results />
+		</section>
 		<section class="semesters">
 			<Semesters />
 		</section>
 		<section class="subjects">
 			<h2>Tárgyak</h2>
 			<Subjects />
-		</section>
-		<section>
-			<h2>Statisztika</h2>
-			<Results />
 		</section>
 	</div>
 </template>
