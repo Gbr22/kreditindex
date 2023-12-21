@@ -44,7 +44,7 @@ watch(subject, (newSubject)=>{
             <div class="top">
                 <input class="subject-name" type="text" v-model="subject.name" placeholder="Tantárgy neve">
                 <span class="action">
-                    <button class="`${type}`" @click="onClick">
+                    <button :class="`${type}`" @click="onClick">
                         <Icon />
                     </button>
                 </span>

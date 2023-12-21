@@ -63,6 +63,16 @@ import Results from '@/components/Results.vue';
             margin-bottom: calc(var(--section-padding) / 2);
         }
     }
+    .semesters {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: var(--section-padding) 0;
+
+        & > :first-child {
+            padding-left: var(--section-padding);
+            padding-right: var(--section-padding);
+        }
+    }
 }
 
 @media screen and (max-width: 850px){

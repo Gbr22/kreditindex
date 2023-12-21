@@ -25,6 +25,39 @@ export const allSemestersSymbol = Symbol("All semesters");
 
 export type SelectedSemesterId = typeof allSemestersSymbol | string;
 
+export function createSemester(){
+    const s: Semester = {
+        name: "Új félév",
+        subjects: [],
+        id: crypto.randomUUID()
+    };
+    semesters.push(s);
+    return s;
+}
+export function deleteSemester(id: SelectedSemesterId){
+    if (id === allSemestersSymbol){
+        semesters.splice(0,semesters.length);
+        return;
+    }
+    const semesterIndex = semesters.findIndex(e=>e.id === id);
+    if (semesterIndex === -1){
+        return;
+    }
+    semesters.splice(semesterIndex, 1);
+    return;
+}
+
+export function renameSemester(id: SelectedSemesterId, name: string){
+    if (id === allSemestersSymbol){
+        return;
+    }
+    const semester = semesters.find(e=>e.id == id);
+    if (!semester){
+        return;
+    }
+    semester.name = name;
+}
+
 function serializeSelectedSemesterId(id: SelectedSemesterId){
     if (id === allSemestersSymbol){
         return JSON.stringify({
@@ -79,14 +112,14 @@ watch(currentSemesterIdValue,(id)=>{
 })
 
 export const currentSemesterId = computed<SelectedSemesterId>(()=>{
-    if (currentSemesterIdValue.value == allSemestersSymbol && semesters.length > 1){
+    if (currentSemesterIdValue.value == allSemestersSymbol){
         return allSemestersSymbol;
     }
     const ids = semesters.map(e=>e.id);
     if (ids.includes(currentSemesterIdValue.value as string)){
         return currentSemesterIdValue.value;
     }
-    return ids[0] || crypto.randomUUID();
+    return ids[ids.length-1] || allSemestersSymbol;
 })
 
 export const currentSemester = computed(()=>{
