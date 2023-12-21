@@ -46,19 +46,11 @@ let subjectToAdd: Subject = {
     grid-template-columns: 1fr repeat(3, auto);
     column-gap: 20px;
     row-gap: 10px;
-}
-@media screen and (max-width: 550px){
-    .subjects {
-        h4 {
-            width: min-content;
-            justify-self: center;
-        }
-    }
-    .action-header {
-        display: none;
-    }
-}
 
+    h4 {
+        text-align: center;
+    }
+}
 .subjects.small-screen {
     display: flex;
     flex-direction: column;

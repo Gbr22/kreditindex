@@ -172,7 +172,7 @@ function onChange(event: Event){
             align-items: center;
             justify-content: center;
             :deep(svg){
-                --size: 15px;
+                --size: 17px;
                 width: var(--size);
                 height: var(--size);
             }
