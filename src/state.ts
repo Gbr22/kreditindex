@@ -1,8 +1,8 @@
 import readXlsxFile from 'read-excel-file';
-import { derived, writable } from 'svelte/store';
+import { computed, ref, reactive, watch } from 'vue';
 import { processData, type Semester, type Subject } from './subjects';
 
-export const currentFile = writable<File | undefined>(undefined);
+export const currentFile = ref<File | undefined>(undefined);
 
 function getInitalSemesters(){
     if (!("localStorage" in globalThis)){
@@ -20,7 +20,7 @@ function getInitalSemesters(){
     }
 }
 
-export const semesters = writable<Semester[]>(getInitalSemesters());
+export const semesters = reactive<Semester[]>(getInitalSemesters());
 export const allSemestersSymbol = Symbol("All semesters");
 
 export type SelectedSemesterId = typeof allSemestersSymbol | string;
@@ -54,10 +54,10 @@ function unserializeSelectedSemesterId(str: string): SelectedSemesterId {
     throw new Error("Unreachable");
 }
 
-export const hasMultipleSemesters = derived(semesters, ($semesters)=>{
-    const res = $semesters.length > 1;
+export const hasMultipleSemesters = computed(()=>{
+    const res = semesters.length > 1;
     return res;
-})
+});
 
 function getInitalSemesterId(): SelectedSemesterId {
     if (!("localStorage" in globalThis)){
@@ -70,89 +70,79 @@ function getInitalSemesterId(): SelectedSemesterId {
     return unserializeSelectedSemesterId(str);
 }
 
-export const currentSemesterIdValue = writable<SelectedSemesterId>(getInitalSemesterId());
+export const currentSemesterIdValue = ref<SelectedSemesterId>(getInitalSemesterId());
 
-currentSemesterIdValue.subscribe(id=>{
+watch(currentSemesterIdValue,(id)=>{
     if ("localStorage" in globalThis){
         localStorage.setItem("selected_semester",serializeSelectedSemesterId(id));
     }
 })
 
-export const currentSemesterId = derived([semesters,currentSemesterIdValue],([$semesters,$currentSemesterValue])=>{
-    if ($currentSemesterValue == allSemestersSymbol && $semesters.length > 1){
+export const currentSemesterId = computed<SelectedSemesterId>(()=>{
+    if (currentSemesterIdValue.value == allSemestersSymbol && semesters.length > 1){
         return allSemestersSymbol;
     }
-    const ids = $semesters.map(e=>e.id);
-    if (ids.includes($currentSemesterValue as string)){
-        return $currentSemesterValue;
+    const ids = semesters.map(e=>e.id);
+    if (ids.includes(currentSemesterIdValue.value as string)){
+        return currentSemesterIdValue.value;
     }
     return ids[0] || crypto.randomUUID();
 })
 
-export const currentSemester = derived([semesters,currentSemesterId], ([$semesters,$currentSemesterId])=>{
-    const semester = $semesters.find(e=>e.id == $currentSemesterId);
+export const currentSemester = computed(()=>{
+    const semester = semesters.find(e=>e.id == currentSemesterId.value);
     return semester;
 })
 
-export const subjects = derived([semesters,currentSemesterId], ([$semesters, $currentSemesterId])=>{
-    if ($currentSemesterId == allSemestersSymbol){
-        return $semesters.map(e=>e.subjects).flat();
+export const subjects = computed(()=>{
+    if (currentSemesterId.value == allSemestersSymbol){
+        return semesters.map(e=>e.subjects).flat();
     }
-    const semester = $semesters.find(e=>e.id == $currentSemesterId);
+    const semester = semesters.find(e=>e.id == currentSemesterId.value);
     return semester?.subjects || [];
 })
 
 export function addSubject(subject: Subject, semesterId: string | typeof allSemestersSymbol){
-    semesters.update(oldSemesters=>{
-        const semesters = [...oldSemesters].map(semester=>{
-            if (semester.id == semesterId){
-                return {...semester, subjects: [...semester.subjects,subject]}
-            }
-            return {...semester, subjects: [...semester.subjects]};
-        });
-        return semesters;
-    })
+    const semester = semesters.find(e=>e.id == semesterId);
+    if (!semester){
+        return;
+    }
+    semester.subjects.push(subject);
 }
 export function removeSubject(subjectId: string){
-    semesters.update(oldSemesters=>{
-        const semesters = [...oldSemesters].map(semester=>{
-            return {
-                ...semester,
-                subjects: semester.subjects.filter(subject=>{
-                    return subject.id != subjectId;
-                })
-            }
-        });
-        return semesters;
-    })
+    const semester = semesters.find(e=>e.subjects.map(e=>e.id).includes(subjectId));
+    if (!semester){
+        return;
+    }
+    const subjectIndex = semester.subjects.findIndex(e=>e.id == subjectId);
+    if (subjectIndex == -1){
+        return;
+    }
+    semester.subjects.splice(subjectIndex,1);
 }
-export function updateSubject(subject: Subject){
-    semesters.update(oldSemesters=>{
-        const semesters = [...oldSemesters].map(semester=>{
-            return {
-                ...semester,
-                subjects: semester.subjects.map(s=>{
-                    if (s.id === subject.id){
-                        return {...subject};
-                    }
-                    return {...s};
-                })
-            }
-        });
-        return semesters;
-    })
+export function updateSubject(newSubject: Subject){
+    const semester = semesters.find(e=>e.subjects.map(e=>e.id).includes(newSubject.id));
+    if (!semester){
+        return;
+    }
+    const subject = semester.subjects.find(e=>e.id == newSubject.id);
+    if (!subject){
+        return;
+    }
+    Object.assign(subject,newSubject);
 }
 
-currentFile.subscribe(value=>{
+watch(currentFile,(value)=>{
     if (value == undefined){
         return;
     }
     readXlsxFile(value).then(table=>{
-        semesters.set(processData(table))
+        semesters.splice(0,semesters.length);
+        semesters.push(...processData(table));
     })
 })
 
-semesters.subscribe(semesters=>{
+watch(semesters,(semesters)=>{
     if ("localStorage" in globalThis){
         localStorage.setItem("semesters",JSON.stringify(semesters));
     }

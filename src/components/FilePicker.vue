@@ -1,7 +1,6 @@
-<script lang="ts">
-import BriefcaseIcon from "../icons/BriefcaseIcon.svelte";
-import { currentFile } from "../state";
-
+<script setup lang="ts">
+import { currentFile } from "@/state";
+import BriefcaseIcon from "@/components/icons/BriefcaseIcon.vue";
 function pickFile(){
     let input = document.createElement("input");
     input.setAttribute("type","file");
@@ -9,20 +8,23 @@ function pickFile(){
     input.onchange = ()=>{
         let file = input?.files?.[0];
         if (file){
-            currentFile.set(file);
+            currentFile.value = file;
         }
     }
-
     input.click();
 }
 </script>
 
-<button on:click={pickFile}>
-    <BriefcaseIcon />
-    <span>Importálás</span>
-</button>
+<template>
+    <button
+        @click="pickFile"
+    >
+        <BriefcaseIcon />
+        <span>Importálás</span>
+    </button>
+</template>
 
-<style lang="scss">
+<style scoped lang="scss">
 button {
     background-color: #0061b7;
     color: white;
@@ -37,7 +39,7 @@ button {
     justify-content: center;
     align-items: center;
 
-    :global(svg) {
+    :deep(svg) {
         width: 1.3em;
         height: 1.3em;
     }

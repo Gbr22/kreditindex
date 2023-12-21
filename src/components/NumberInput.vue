@@ -1,7 +1,18 @@
-<script lang="ts">
-export let value: number;
-export let min: number;
-export let max: number;
+<script setup lang="ts">
+
+import { defineProps, defineEmits, ref } from "vue";
+
+const props = defineProps<{
+    min: number
+    max: number
+    modelValue: number
+}>()
+
+const { min, max } = props;
+
+const n = ref<number>(props.modelValue);
+
+const emit = defineEmits(['update:modelValue']);
 
 function keepRange(n: number){
     if (n < min){
@@ -13,23 +24,24 @@ function keepRange(n: number){
     return n;
 }
 
-function plus(){
-    value = keepRange(value+1);
-}
-function minus(){
-    value = keepRange(value-1);
+function updateValue(diff: number){
+    const newVal = keepRange(n.value + diff);
+    emit("update:modelValue",newVal);
+    n.value = newVal;
 }
 </script>
 
-<span class="input">
-    <span class="buttons">
-        <button class="minus" on:click={minus}>-</button>
-        <span class="number">{value}</span>
-        <button class="plus" on:click={plus}>+</button>
+<template>
+    <span class="input">
+        <span class="buttons">
+            <button class="minus" @click="updateValue(-1)">-</button>
+            <span class="number">{{n}}</span>
+            <button class="plus" @click="updateValue(+1)">+</button>
+        </span>
     </span>
-</span>
+</template>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "../styles/button.scss";
 
 .input {

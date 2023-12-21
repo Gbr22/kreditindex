@@ -1,4 +1,4 @@
-import { derived } from "svelte/store";
+import { computed } from "vue";
 import { subjects } from "./state";
 import type { Subject } from "./subjects";
 
@@ -50,22 +50,22 @@ function semesterCount(subjects: Subject[]){
     return 1;
 }
 
-export const totalCreditCount = derived(subjects, ($subjects)=>{
-    return getTotalCreditCount($subjects);
+export const totalCreditCount = computed(()=>{
+    return getTotalCreditCount(subjects.value);
 })
 
-export const completedCreditCount = derived(subjects, ($subjects)=>{
-    return getCompletedCreditCount($subjects);
+export const completedCreditCount = computed(()=>{
+    return getCompletedCreditCount(subjects.value);
 })
 
-export const weightedAverage = derived(subjects, ($subjects)=>{
-    return formatNumber(getWeightedAverage($subjects));
+export const weightedAverage = computed(()=>{
+    return formatNumber(getWeightedAverage(subjects.value));
 })
 
-export const creditIndex = derived(subjects, ($subjects)=>{
-    return formatNumber(getCreditIndex($subjects));
+export const creditIndex = computed(()=>{
+    return formatNumber(getCreditIndex(subjects.value));
 })
 
-export const correctedCreditIndex = derived(subjects, ($subjects)=>{
-    return formatNumber(getCorrectedCreditIndex($subjects));
+export const correctedCreditIndex = computed(()=>{
+    return formatNumber(getCorrectedCreditIndex(subjects.value));
 })

@@ -1,0 +1,15 @@
+@import './base.scss';
+
+html, body {
+    font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif; 
+    background-color: #f1f5f9;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
+}
+* {
+    font-family: inherit;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}

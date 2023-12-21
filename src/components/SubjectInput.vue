@@ -1,56 +1,50 @@
-<script lang="ts">
-	import { writable } from "svelte/store";
-import PlusIcon from "../icons/PlusIcon.svelte";
-import XIcon from "../icons/XIcon.svelte";
-import { addSubject, currentSemesterId, removeSubject, updateSubject } from "../state";
-import type { Subject } from "../subjects";
-import NumberInput from "./NumberInput.svelte";
-import MediaQuery from 'svelte-media-queries';
+<script setup lang="ts">
+import { addSubject, currentSemesterId, removeSubject, updateSubject } from '@/state';
+import { type Subject } from '@/subjects';
+import { useMediaQuery } from '@vueuse/core';
+import { defineProps, reactive, watch } from "vue";
+import NumberInput from './NumberInput.vue';
+import XIcon from "@/components/icons/XIcon.vue";
+import PlusIcon from "@/components/icons/PlusIcon.vue";
 
-export let value: Subject;
-export let type: "add" | "remove";
+const props = defineProps<{
+    value: Subject
+    type: "add" | "remove"
+}>()
 
-const subject = writable({...value});
+const { value, type } = props;
 
-const Icon = (()=>{
-    if (type == "add"){
-        return PlusIcon;
-    } else if (type == "remove"){
-        return XIcon;
-    } else {
-        throw new Error("Unreachable");
-    }
-})()
+const Icon = type == "add" ? PlusIcon : XIcon;
+
+const subject = reactive({...value});
+const isScreenSmall = useMediaQuery('(max-width: 650px)')
 
 function onClick(){
     if (type == "add"){
-        const copy = {...$subject, id: crypto.randomUUID()};
-        addSubject(copy,$currentSemesterId);
-        subject.update(s=>{
-            return {...s, name: ""}
-        })
+        const copy: Subject = {...subject, id: crypto.randomUUID()};
+        addSubject(copy,currentSemesterId.value);
+        subject.name = "";
     }
     else if (type == "remove"){
         removeSubject(value.id);
     }
 }
 
-subject.subscribe(newSubject=>{
+watch(subject, (newSubject)=>{
     if (type == "remove"){
         updateSubject(newSubject);
     }
 })
-
 </script>
 
-<MediaQuery query="(max-width: 650px)" let:matches={isScreenSmall}>
-    {#if isScreenSmall}
+<template>
+    <template v-if="isScreenSmall">
         <div class="subject small-screen">
             <h4>Tantárgy</h4>
             <div class="top">
-                <input class="subject-name" type="text" bind:value={$subject.name} placeholder="Tantárgy neve">
+                <input class="subject-name" type="text" v-model="subject.name" placeholder="Tantárgy neve">
                 <span class="action">
-                    <button class={type} on:click={onClick}>
+                    <button class="`${type}`" @click="onClick">
                         <Icon />
                     </button>
                 </span>
@@ -58,29 +52,32 @@ subject.subscribe(newSubject=>{
             <div class="bottom">
                 <span class="weight">
                     <h4>Kredit</h4>
-                    <NumberInput bind:value={$subject.weight} min={1} max={30} />
+                    <NumberInput v-model="subject.weight" :min="1" :max="30" />
                 </span>
                 <span class="grade">
                     <h4>Jegy</h4>
-                    <NumberInput bind:value={$subject.grade} min={1} max={5} />
+                    <NumberInput v-model="subject.grade" :min="1" :max="5" />
                 </span>
             </div>
         </div>
-    {:else}
-        <input class="subject-name" type="text" bind:value={$subject.name} placeholder="Tantárgy neve">
-        <span class="weight"><NumberInput bind:value={$subject.weight} min={1} max={30} /></span>
-        <span class="grade"><NumberInput bind:value={$subject.grade} min={1} max={5} /></span>
+    </template>
+    <template v-else>
+        <input class="subject-name" type="text" v-model="subject.name" placeholder="Tantárgy neve">
+        <span class="weight">
+            <NumberInput v-model="subject.weight" :min="1" :max="30" />
+        </span>
+        <span class="grade">
+            <NumberInput v-model="subject.grade" :min="1" :max="5" />
+        </span>
         <span class="action">
-            <button class={type} on:click={onClick}>
+            <button :class="`${type}`" @click="onClick">
                 <Icon />
             </button>
         </span>
-    {/if}
-    
-</MediaQuery>
+    </template>
+</template>
 
-
-<style lang="scss">
+<style scoped lang="scss">
 @import "../styles/button.scss";
 
 @mixin action-button {

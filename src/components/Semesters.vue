@@ -1,28 +1,31 @@
-<script lang="ts">
-import type { Subject } from "../subjects";
-import { semesters, subjects, currentSemesterId, currentSemesterIdValue, hasMultipleSemesters, allSemestersSymbol } from "../state";
-import { derived } from "svelte/store";
+<script setup lang="ts">
+import { allSemestersSymbol, currentSemesterId, currentSemesterIdValue, semesters, type SelectedSemesterId } from "@/state";
+
+function updateSemeseterId(id: SelectedSemesterId){
+    currentSemesterIdValue.value = id;
+}
 </script>
 
-<div class="semesters">
-    {#if $hasMultipleSemesters}
-        <button class="{$currentSemesterId == allSemestersSymbol ? 'active' : ''}"
-        on:click={()=>void currentSemesterIdValue.set(allSemestersSymbol)}
+<template>
+    <div class="semesters">
+        <button
+            :class="{active: currentSemesterId == allSemestersSymbol}"
+            @click="()=>updateSemeseterId(allSemestersSymbol)"
         >
             Összes félév
         </button>
-    {/if}
-    {#each $semesters as semester (semester.id)}
         <button
-            class="{$currentSemesterId == semester.id ? 'active' : ''}"
-            on:click={()=>void currentSemesterIdValue.set(semester.id)}
+            v-for="semester in semesters"
+            :key="semester.id"
+            :class="{active: currentSemesterId == semester.id}"
+            @click="()=>updateSemeseterId(semester.id)"
         >
-            {semester.name}
+            {{semester.name}}
         </button>
-    {/each}
-</div>
+    </div>
+</template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .semesters {
     display: flex;
     gap: 10px;

@@ -1,27 +1,29 @@
-<script lang="ts">
+<script setup lang="ts">
 import { completedCreditCount, correctedCreditIndex, creditIndex, totalCreditCount, weightedAverage } from "../stats";
 </script>
 
-<div class="stats">
+<template>
+    <div class="stats">
     <div>
         <h3>Kreditek száma</h3>
-        <span>{$completedCreditCount}/{$totalCreditCount}</span>
+        <span>{{completedCreditCount}}/{{totalCreditCount}}</span>
     </div>
     <div>
         <h3>Kreditindex</h3>
-        <span>{$creditIndex}</span>
+        <span>{{creditIndex}}</span>
     </div>
     <div>
         <h3>Korrigált kreditindex</h3>
-        <span>{$correctedCreditIndex}</span>
+        <span>{{correctedCreditIndex}}</span>
     </div>
     <div>
         <h3>Súlyozott átlag</h3>
-        <span>{$weightedAverage}</span>
+        <span>{{weightedAverage}}</span>
     </div>
 </div>
+</template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
