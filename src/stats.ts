@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { semesters, subjects } from "./state";
+import { allSemestersSymbol, currentSemesterId, semesters, subjects } from "./state";
 import type { Subject } from "./subjects";
 
 function sum(numbers: number[]){
@@ -44,7 +44,10 @@ function formatNumber(n: number){
 }
 
 function semesterCount(){
-    return semesters.length;
+    if (currentSemesterId.value == allSemestersSymbol){
+        return semesters.length;
+    }
+    return 1;
 }
 
 export const totalCreditCount = computed(()=>{
