@@ -140,7 +140,7 @@ export function addSubject(subject: Subject, semesterId: string | typeof allSeme
     if (!semester){
         return;
     }
-    semester.subjects.push(subject);
+    semester.subjects.unshift(subject);
 }
 export function removeSubject(subjectId: string){
     const semester = semesters.find(e=>e.subjects.map(e=>e.id).includes(subjectId));

@@ -18,12 +18,11 @@ let subjectToAdd: Subject = {
 <template>
     <template v-if="isScreenSmall">
         <div class="subjects small-screen">
+            <SubjectInput :value="subjectToAdd" type="add" v-if="currentSemesterId != allSemestersSymbol" />
             <template v-for="subject in subjects" :key="subject.id">
                 <SubjectInput :value="subject" type="remove" />
                 <div class="divider"></div>
             </template>
-
-            <SubjectInput :value="subjectToAdd" type="add" v-if="currentSemesterId != allSemestersSymbol" />
         </div>
     </template>
     <template v-else>
@@ -32,8 +31,8 @@ let subjectToAdd: Subject = {
             <h4>Kredit érték</h4>
             <h4>Eredmény</h4>
             <h4><span class="action-header">Kezelés</span></h4>
-            <SubjectInput :value="subject" type="remove" v-for="subject in subjects" :key="subject.id" />
             <SubjectInput :value="subjectToAdd" type="add" v-if="currentSemesterId != allSemestersSymbol" />
+            <SubjectInput :value="subject" type="remove" v-for="subject in subjects" :key="subject.id" />
         </div>
     </template>
 </template>
