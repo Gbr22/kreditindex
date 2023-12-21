@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { subjects } from "./state";
+import { semesters, subjects } from "./state";
 import type { Subject } from "./subjects";
 
 function sum(numbers: number[]){
@@ -25,14 +25,14 @@ function getWeightedAverage(subjects: Subject[]){
 
 function getCreditIndex(subjects: Subject[]){
     let s = sum(getCompletedSubjects(subjects).map(e=>e.grade as number * e.weight));
-    const credits = 30 * semesterCount(subjects);
+    const credits = 30 * semesterCount();
     return s / credits;
 }
 
 function getCorrectedCreditIndex(subjects: Subject[]){
     let s = sum(getCompletedSubjects(subjects).map(e=>e.grade as number * e.weight));
     let correction = getCompletedCreditCount(subjects) / getTotalCreditCount(subjects);
-    const credits = 30 * semesterCount(subjects);
+    const credits = 30 * semesterCount();
     return ( s / credits ) * correction;
 }
 
@@ -43,11 +43,8 @@ function formatNumber(n: number){
     return n.toFixed(4);
 }
 
-function semesterCount(subjects: Subject[]){
-    /* const semesters = subjects.map(subject=>subject.semester);
-    const set = new Set(semesters);
-    return set.size; */
-    return 1;
+function semesterCount(){
+    return semesters.length;
 }
 
 export const totalCreditCount = computed(()=>{
