@@ -1,8 +1,21 @@
 <script setup lang="ts">
-import { allSemestersSymbol, currentSemesterId, currentSemesterIdValue, semesters, type SelectedSemesterId, createSemester, deleteSemester, renameSemester } from "@/state";
+import {
+    type SelectedSemesterId,
+    allSemestersSymbol,
+    currentSemesterId,
+    currentSemesterIdValue,
+    semesters,
+    createSemester,
+    deleteSemester,
+    renameSemester,
+    serializeSelectedSemesterId,
+    unserializeSelectedSemesterId
+} from "@/state";
 import TrashIcon from "@/components/icons/TrashIcon.vue";
 import EditIcon from "@/components/icons/EditIcon.vue";
 import PlusIcon from "@/components/icons/PlusIcon.vue";
+import { useMediaQuery } from '@vueuse/core';
+import { computed, watch } from "vue";
 
 function updateSemeseterId(id: SelectedSemesterId){
     currentSemesterIdValue.value = id;
@@ -26,11 +39,22 @@ function edit(){
 function remove(){
     deleteSemester(currentSemesterId.value);
 }
+
+const isScreenSmall = useMediaQuery('(max-width: 650px)');
+
+const selectValue = computed(()=>{
+    return serializeSelectedSemesterId(currentSemesterId.value);
+})
+
+function onChange(event: Event){
+    const value = (event.target as HTMLSelectElement).value;
+    updateSemeseterId(unserializeSelectedSemesterId(value));
+}
 </script>
 
 <template>
     <div class="container">
-        <div class="semesters">
+        <div class="semesters" v-if="!isScreenSmall">
             <button
                 :class="{active: currentSemesterId == allSemestersSymbol}"
                 @click="()=>updateSemeseterId(allSemestersSymbol)"
@@ -46,6 +70,25 @@ function remove(){
                 {{semester.name}}
             </button>
         </div>
+        <select
+            v-else
+            class="semester-select"
+            :value="selectValue"
+            @change="onChange"
+        >
+            <option
+                :value="serializeSelectedSemesterId(allSemestersSymbol)"
+            >
+                Összes félév
+            </option>
+            <option
+                v-for="semester in semesters"
+                :key="semester.id"
+                :value="serializeSelectedSemesterId(semester.id)"
+            >
+                {{ semester.name }}
+            </option>
+        </select>
         <div class="options">
             <button class="add" @click="create">
                 <PlusIcon />
@@ -71,8 +114,19 @@ function remove(){
     --height: 32px;
     height: var(--height);
 
-    button {
+    button, select {
         transition: background-color 0.3s ease;
+        background-color: rgb(237, 237, 237);
+        color: rgb(66, 66, 66);
+        &:hover {
+            background-color: rgb(212, 212, 212);
+        }
+    }
+
+    select {
+        font-size: 15px;
+        border-radius: 0.5em;
+        padding: 0 0.7em;
     }
 
     .semesters {
@@ -89,12 +143,6 @@ function remove(){
             display: flex;
             justify-content: center;
             align-items: center;
-
-            background-color: rgb(237, 237, 237);
-            color: rgb(66, 66, 66);
-            &:hover {
-                background-color: rgb(212, 212, 212);
-            }
 
             &.active {
                 background-color: #93ccff;

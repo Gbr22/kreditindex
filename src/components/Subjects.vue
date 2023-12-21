@@ -23,7 +23,7 @@ let subjectToAdd: Subject = {
                 <div class="divider"></div>
             </template>
 
-            <SubjectInput :value="subjectToAdd" type="add" v-if="currentSemesterId == allSemestersSymbol" />
+            <SubjectInput :value="subjectToAdd" type="add" v-if="currentSemesterId != allSemestersSymbol" />
         </div>
     </template>
     <template v-else>

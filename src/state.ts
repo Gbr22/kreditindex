@@ -58,7 +58,7 @@ export function renameSemester(id: SelectedSemesterId, name: string){
     semester.name = name;
 }
 
-function serializeSelectedSemesterId(id: SelectedSemesterId){
+export function serializeSelectedSemesterId(id: SelectedSemesterId){
     if (id === allSemestersSymbol){
         return JSON.stringify({
             type: "all"
@@ -69,7 +69,7 @@ function serializeSelectedSemesterId(id: SelectedSemesterId){
         value: id
     })
 }
-function unserializeSelectedSemesterId(str: string): SelectedSemesterId {
+export function unserializeSelectedSemesterId(str: string): SelectedSemesterId {
     const obj = JSON.parse(str) as {
         type: "all"
     } | {
