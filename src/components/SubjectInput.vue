@@ -40,7 +40,7 @@ watch(subject, (newSubject)=>{
 <template>
     <template v-if="isScreenSmall">
         <div class="subject small-screen">
-            <h4>Tantárgy</h4>
+            <h4>{{ type == "add" ? "Tantárgy hozzáadása" : "Tantárgy" }}</h4>
             <div class="top">
                 <input class="subject-name" type="text" v-model="subject.name" placeholder="Tantárgy neve">
                 <span class="action">
