@@ -170,9 +170,8 @@ watch(currentFile,(value)=>{
         return;
     }
     readXlsxFile(value).then(table=>{
-        semesters.splice(0,semesters.length);
-        semesters.push(...processData(table));
-    })
+        semesters.push(...processData(table, value.name));
+    });
 })
 
 watch(semesters,(semesters)=>{

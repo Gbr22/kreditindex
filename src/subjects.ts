@@ -24,14 +24,25 @@ const gradeMap: {[key: string]: number} = {
 let gradeRegexText = `(${Object.keys(gradeMap).join("|")})`;
 let gradeRegex = new RegExp(gradeRegexText,"g");
 
-export function processData(rows: Row[]): Semester[] {
+function normalize(s: unknown) {
+    return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function equals(a: unknown, b: unknown) {
+    return normalize(a) === normalize(b);
+}
+
+function findColIndex(header: unknown[], whitelist: unknown[]) {
+    return header.findIndex(col=>whitelist.some(w=>equals(col,w)));
+}
+
+export function processData(rows: Row[], fileName: string) {
     const header = rows.shift() || [];
-    const isAllSemesters = header.includes("Félév");
-    const shift = isAllSemesters ? 1 : 0;
-    const nameCol = 1;
-    const weightCol = 2;
-    const semesterCol = 3;
-    const gradeTextCol = 7+shift;
+    const semesterCol = findColIndex(header,["Félév","Félév neve"]);
+    const nameCol = findColIndex(header,["Tantárgy","Tantárgy neve","Tárgy címe, előadó neve","Tárgy címe","Tárgynév","Tárgy","Név"]);
+    const weightCol = findColIndex(header,["Kr.","Kredit"]);
+    const gradeTextCol = findColIndex(header,["Jegy","Érdemjegy","Jegy szövegesen","Jegyek","Teljesítés, érdemjegy"]);
+    const isAllSemesters = semesterCol != -1;
 
     const map = new Map<string, Subject[]>();
 
@@ -49,7 +60,7 @@ export function processData(rows: Row[]): Semester[] {
         const weight = Number(row[weightCol]);
         const gradeText = String(row[gradeTextCol]);
         const gradeMatches = [...gradeText.matchAll(gradeRegex)];
-        const semester = isAllSemesters ? String(row[semesterCol]) : "Névtelen félév";
+        const semester = isAllSemesters ? String(row[semesterCol]) : fileName;
         let grade: number = 1;
         let last = gradeMatches[gradeMatches.length-1];
         if (last){
@@ -73,7 +84,7 @@ export function processData(rows: Row[]): Semester[] {
             subjects: value,
             id: crypto.randomUUID()
         } satisfies Semester;
-    })
+    });
 
     return semesters;
 }

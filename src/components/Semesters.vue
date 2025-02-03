@@ -27,10 +27,10 @@ function create(){
 function edit(){
     const current = currentSemesterId.value;
     if (current == allSemestersSymbol){
-        alert("Átnevezéshez válassz ki egy konrét félévet!");
+        alert("Átnevezéshez ki kell választani egy félévet!");
         return;
     }
-    const name = prompt("Mi legyen az új neve?")?.trim();
+    const name = prompt("Félév nevének megadása")?.trim();
     if (!name){
         return;
     }
