@@ -38,8 +38,9 @@ function findColIndex(header: unknown[], whitelist: unknown[]) {
 
 export function processData(rows: Row[], fileName: string) {
     const header = rows.shift() || [];
+    console.log("header",header);
     const semesterCol = findColIndex(header,["Félév","Félév neve"]);
-    const nameCol = findColIndex(header,["Tantárgy","Tantárgy neve","Tárgy címe, előadó neve","Tárgy címe","Tárgynév","Tárgy","Név"]);
+    const nameCol = findColIndex(header,["Tantárgy","Tantárgy neve","Tárgy címe, előadó neve","Tárgy címe","Tárgynév","Tárgy","Név","Tárgy neve"]);
     const weightCol = findColIndex(header,["Kr.","Kredit"]);
     const gradeTextCol = findColIndex(header,["Jegy","Érdemjegy","Jegy szövegesen","Jegyek","Teljesítés, érdemjegy"]);
     const isAllSemesters = semesterCol != -1;
